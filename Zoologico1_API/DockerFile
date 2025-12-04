@@ -6,14 +6,18 @@ ENV ASPNETCORE_URLS=http://+:10000
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copiar solo el csproj primero
-COPY Zoologico1_API.csproj ./
+# COPIAR LOS ARCHIVOS .csproj DE TODOS LOS PROYECTOS
+COPY ../Zoologico1_Modelos/Zoologico1_Modelos.csproj Zoologico1_Modelos/
+COPY Zoologico1_API.csproj Zoologico1_API/
 
-RUN dotnet restore "./Zoologico1_API.csproj"
+# RESTAURAR
+RUN dotnet restore Zoologico1_API/Zoologico1_API.csproj
 
-# Copiar todo el proyecto
-COPY . .
+# COPIAR TODO EL REPO
+COPY .. .
 
+# CONSTRUIR
+WORKDIR /src/Zoologico1_API
 RUN dotnet build "Zoologico1_API.csproj" -c Release -o /app/build
 
 FROM build AS publish
